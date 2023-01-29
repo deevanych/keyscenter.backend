@@ -9,11 +9,11 @@
     "build": "strapi build",
     "strapi": "strapi"
   },
-  "devDependencies": {},
   "dependencies": {
-    "@strapi/strapi": "4.6.0",
-    "@strapi/plugin-users-permissions": "4.6.0",
+    "@strapi/plugin-graphql": "^4.6.0",
     "@strapi/plugin-i18n": "4.6.0",
+    "@strapi/plugin-users-permissions": "4.6.0",
+    "@strapi/strapi": "4.6.0",
     "mysql": "2.18.1"
   },
   "author": {
@@ -26,5 +26,10 @@
     "node": ">=14.19.1 <=18.x.x",
     "npm": ">=6.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "overrides": {
+    "@strapi/plugin-graphql": {
+      "graphql": "16.6.0"
+    }
+  }
 }
