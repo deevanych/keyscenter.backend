@@ -58,6 +58,12 @@
       "type": "uid",
       "unique": true,
       "targetField": "title"
+    },
+    "platforms": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::platform.platform",
+      "mappedBy": "product"
     }
   }
 }
