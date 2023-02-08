@@ -15,7 +15,8 @@
     "title": {
       "type": "string",
       "required": true,
-      "unique": true
+      "unique": true,
+      "pluginOptions": {}
     },
     "images": {
       "type": "media",
@@ -23,24 +24,29 @@
       "required": false,
       "allowedTypes": [
         "images"
-      ]
+      ],
+      "pluginOptions": {}
     },
     "description": {
-      "type": "richtext"
+      "type": "richtext",
+      "pluginOptions": {}
     },
     "instruction": {
-      "type": "richtext"
+      "type": "richtext",
+      "pluginOptions": {}
     },
     "price": {
       "type": "integer",
       "default": 0,
       "required": false,
-      "min": 0
+      "min": 0,
+      "pluginOptions": {}
     },
     "salePrice": {
       "type": "integer",
       "min": 0,
-      "default": 0
+      "default": 0,
+      "pluginOptions": {}
     },
     "product_keys": {
       "type": "relation",
@@ -64,6 +70,31 @@
       "relation": "oneToMany",
       "target": "api::platform.platform",
       "mappedBy": "product"
+    },
+    "product_type": {
+      "type": "enumeration",
+      "enum": [
+        "Цифровой ключ",
+        "Логин/пароль",
+        "Ссылка"
+      ],
+      "default": "Цифровой ключ",
+      "pluginOptions": {}
+    },
+    "product_delivery": {
+      "type": "enumeration",
+      "enum": [
+        "Ручная",
+        "Автоматическая"
+      ],
+      "default": "Автоматическая",
+      "pluginOptions": {}
+    },
+    "views": {
+      "type": "biginteger",
+      "default": "0",
+      "min": "0",
+      "pluginOptions": {}
     }
   }
 }
