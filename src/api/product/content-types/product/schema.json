@@ -27,14 +27,6 @@
       ],
       "pluginOptions": {}
     },
-    "description": {
-      "type": "richtext",
-      "pluginOptions": {}
-    },
-    "instruction": {
-      "type": "richtext",
-      "pluginOptions": {}
-    },
     "price": {
       "type": "integer",
       "default": 0,
@@ -95,6 +87,20 @@
       "default": "0",
       "min": "0",
       "pluginOptions": {}
+    },
+    "description": {
+      "type": "customField",
+      "options": {
+        "preset": "toolbar"
+      },
+      "customField": "plugin::ckeditor5.CKEditor"
+    },
+    "instruction": {
+      "type": "customField",
+      "options": {
+        "preset": "toolbar"
+      },
+      "customField": "plugin::ckeditor5.CKEditor"
     }
   }
 }
