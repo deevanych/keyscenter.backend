@@ -1,0 +1,20 @@
+{
+  "kind": "collectionType",
+  "collectionName": "delivery_methods",
+  "info": {
+    "singularName": "delivery-method",
+    "pluralName": "delivery-methods",
+    "displayName": "Delivery method"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    }
+  }
+}

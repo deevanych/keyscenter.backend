@@ -63,25 +63,6 @@
       "target": "api::platform.platform",
       "mappedBy": "product"
     },
-    "product_type": {
-      "type": "enumeration",
-      "enum": [
-        "Цифровой ключ",
-        "Логин/пароль",
-        "Ссылка"
-      ],
-      "default": "Цифровой ключ",
-      "pluginOptions": {}
-    },
-    "product_delivery": {
-      "type": "enumeration",
-      "enum": [
-        "Ручная",
-        "Автоматическая"
-      ],
-      "default": "Автоматическая",
-      "pluginOptions": {}
-    },
     "views": {
       "type": "biginteger",
       "default": "0",
@@ -101,6 +82,16 @@
         "preset": "toolbar"
       },
       "customField": "plugin::ckeditor5.CKEditor"
+    },
+    "delivery_method": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::delivery-method.delivery-method"
+    },
+    "product_type": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::product-type.product-type"
     }
   }
 }
