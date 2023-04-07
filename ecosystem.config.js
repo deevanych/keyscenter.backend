@@ -2,7 +2,7 @@ module.exports = {
   apps : [{
     name   : "shop-backend",
     script : "./server.js",
-    instances: 4,
+    instances: process.env.INSTANCES_COUNT || -1,
     wait_ready: true,
     exec_mode: "cluster",
     env_production: {
