@@ -1,6 +1,9 @@
 const strapi = require('@strapi/strapi');
 
-strapi({}).start().then(r => {
+const start = async () => {
+  await strapi({ distDir: './dist' }).start()
   process.send('ready')
   console.log('Instance is up!')
-});
+}
+
+start()
