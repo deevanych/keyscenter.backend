@@ -1,6 +1,6 @@
 export default () => ({
   redis: {
-    enabled: true,
+    enabled: +process.env.CACHE_IS_ENABLED,
     config: {
       connections: {
         default: {
@@ -17,7 +17,7 @@ export default () => ({
     },
   },
   "rest-cache": {
-    enabled: true,
+    enabled: +process.env.CACHE_IS_ENABLED,
     config: {
       provider: {
         name: "redis",
