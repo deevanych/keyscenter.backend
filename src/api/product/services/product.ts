@@ -29,6 +29,12 @@ const productWithReplacedImages = (product) => {
 export default factories.createCoreService('api::product.product', ({ strapi }): {} => ({
   async findOne(id, params) {
     const product = await strapi.entityService.findOne('api::product.product', id, params)
+    await strapi.entityService.update('api::product.product', id, {
+      data: {
+        views: +product.views + 1,
+      },
+      params
+    })
 
     return productWithReplacedImages(product)
   }

@@ -5,7 +5,27 @@ export default {
    *
    * This gives you an opportunity to extend code.
    */
-  register(/*{ strapi }*/) {},
+  register({ strapi }) {
+    const extensionService = strapi.service("plugin::graphql.extension");
+    extensionService.use(({ strapi }) => ({
+      typeDefs: ``,
+      resolvers: {
+        Query: {
+          product: {
+            resolve: async (parent, args, context) => {
+              const { toEntityResponse } = strapi.service(
+                "plugin::graphql.format"
+              ).returnTypes;
+
+              const product = await strapi.service('api::product.product').findOne(args.id, { populate: '*' })
+
+              return toEntityResponse(product, { populate: '*', resourceUID: 'api::product.product'});
+            }
+          }
+        }
+      },
+    }));
+  },
 
   /**
    * An asynchronous bootstrap function that runs before
