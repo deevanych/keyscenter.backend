@@ -92,6 +92,12 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::product-type.product-type"
+    },
+    "order": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::order.order",
+      "inversedBy": "products"
     }
   }
 }

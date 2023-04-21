@@ -4,7 +4,8 @@
   "info": {
     "singularName": "product-key",
     "pluralName": "product-keys",
-    "displayName": "Product key"
+    "displayName": "Product key",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -22,6 +23,12 @@
       "relation": "manyToOne",
       "target": "api::product.product",
       "private": true,
+      "inversedBy": "product_keys"
+    },
+    "order": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::order.order",
       "inversedBy": "product_keys"
     }
   }
