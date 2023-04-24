@@ -93,9 +93,9 @@
       "relation": "oneToOne",
       "target": "api::product-type.product-type"
     },
-    "order": {
+    "orders": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "manyToMany",
       "target": "api::order.order",
       "inversedBy": "products"
     }

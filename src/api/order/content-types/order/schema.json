@@ -18,12 +18,6 @@
       "target": "plugin::users-permissions.user",
       "inversedBy": "orders"
     },
-    "products": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::product.product",
-      "mappedBy": "order"
-    },
     "is_paid": {
       "type": "boolean",
       "default": false
@@ -34,8 +28,21 @@
       "target": "api::product-key.product-key",
       "mappedBy": "order"
     },
-    "order_id": {
-      "type": "uid"
+    "order_uuid": {
+      "type": "string",
+      "required": true
+    },
+    "products": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::product.product",
+      "mappedBy": "orders"
+    },
+    "sum": {
+      "type": "integer",
+      "min": 0,
+      "required": true,
+      "default": 0
     }
   }
 }
