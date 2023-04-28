@@ -52,26 +52,26 @@ export default {
       //     pass: testAccount.pass, // generated ethereal password
       //   },
       // });
-      const transporter = nodemailer.createTransport({
-        host: "smtp.beget.com",
-        port: 25,
-        secure: false,
-        auth: {
-          user: process.env.BEGET_MAIL_LOGIN, // generated ethereal user
-          pass: process.env.BEGET_MAIL_PASSWORD, // generated ethereal password
-        },
-      });
+      try {
+        const transporter = nodemailer.createTransport({
+          host: "smtp.beget.com",
+          port: 25,
+          secure: false,
+          auth: {
+            user: process.env.BEGET_MAIL_LOGIN, // generated ethereal user
+            pass: process.env.BEGET_MAIL_PASSWORD, // generated ethereal password
+          },
+        });
 
-      const info = await transporter.sendMail({
-        from: "KEYCENTER <order@keyscenter.ru>",
-        to: emailTo,
-        subject: "Заказ в keyscenter.ru",
-        text: "Hello world?",
-        html: emailTemplate(products, result.sum)
-      });
-
-      console.log("Message sent: %s", info.messageId);
-      // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        await transporter.sendMail({
+          from: "KEYSCENTER <order@keyscenter.ru>",
+          to: emailTo,
+          subject: "Заказ в keyscenter.ru",
+          html: emailTemplate(products, result.sum)
+        });
+      } catch (e) {
+        console.log(e)
+      }
     }
   },
 };

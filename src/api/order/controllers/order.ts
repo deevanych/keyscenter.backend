@@ -4,7 +4,7 @@
 
 import {factories} from '@strapi/strapi'
 import {v4 as uuidv4} from 'uuid';
-import crypto from 'crypto'
+import {createHash} from 'crypto'
 import utils from '@strapi/utils'
 
 export default factories.createCoreController('api::order.order', ({strapi}) => ({
@@ -90,7 +90,7 @@ export default factories.createCoreController('api::order.order', ({strapi}) => 
     async orderStatusHook(ctx) {
       try {
         const {body} = ctx.request
-        const order_uuid = 'f3b76dec-e057-4142-81e4-1d6ed71a9482'
+        const order_uuid = body.label
         const validationParams = [
           body.notification_type,
           body.operation_id,
@@ -102,7 +102,7 @@ export default factories.createCoreController('api::order.order', ({strapi}) => 
           process.env.YOOUMONEY_SECRET,
           body.label
         ]
-        const hashInstance = crypto.createHash('sha1')
+        const hashInstance = createHash('sha1')
         hashInstance.update(validationParams.join('&'))
         const hexString = hashInstance.digest('hex')
 
@@ -110,7 +110,7 @@ export default factories.createCoreController('api::order.order', ({strapi}) => 
           throw 'Hashes are not equals'
         }
 
-        return await strapi.db.query('api::order.order').update({
+        await strapi.db.query('api::order.order').update({
           where: {
             order_uuid
           },
@@ -118,6 +118,8 @@ export default factories.createCoreController('api::order.order', ({strapi}) => 
             is_paid: true
           }
         })
+
+        return 'success'
       } catch (e) {
         throw new utils.errors.ForbiddenError(e);
       }
