@@ -6,6 +6,9 @@ export default {
     const {result} = event
     const order = await strapi.entityService.findOne('api::order.order', result.id, {
       populate: {
+        users_permissions_user: {
+          fields: ['email']
+        },
         product_keys: {
           populate: {
             product: {
@@ -40,7 +43,7 @@ export default {
 
     if (result.is_paid) {
       console.log('Order has been paid!')
-      const emailTo = result.users_permissions_user.email
+      const emailTo = order.users_permissions_user.email
       // const testAccount = await nodemailer.createTestAccount();
 
       // let transporter = nodemailer.createTransport({
