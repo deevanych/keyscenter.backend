@@ -2,7 +2,58 @@
  * product service
  */
 
-import { factories } from '@strapi/strapi';
+// @ts-nocheck
 
-export default factories.createCoreService('api::product.product');
+import {factories} from '@strapi/strapi';
+
+export default factories.createCoreService('api::product.product', ({strapi}) => ({
+    async findOne(slug: string, params: { populate: any }) {
+      return await strapi.db.query('api::product.product').findOne({
+        where: {slug},
+        select: [
+          'title',
+          'price',
+          'salePrice',
+          'slug',
+          'description',
+          'instruction',
+          'views'
+        ],
+        ...params,
+        populate: {
+          images: {
+            select: ['formats']
+          },
+          platforms: {
+            select: ['title']
+          },
+          product_category: {
+            select: ['slug', 'title']
+          },
+          product_type: {
+            select: ['title']
+          },
+          delivery_method: {
+            select: ['title']
+          },
+          product_keys: {
+            select: ['id'],
+            where: {
+              $and: [
+                {
+                  published_at: {
+                    $notNull: true
+                  }
+                },
+                {
+                  order: null
+                },
+              ]
+            }
+          }
+        }
+      })
+    }
+  })
+)
 
