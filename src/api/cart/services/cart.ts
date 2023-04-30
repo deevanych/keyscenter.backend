@@ -15,6 +15,31 @@ export default factories.createCoreService('api::cart.cart', ({strapi}) => ({
 
     return await super.create(params)
   },
+  async getSumByItems(items) {
+    const productsIDs = items.map((item) => {
+      return {
+        id: item.product
+      }
+    })
+
+    let products = []
+
+    if (productsIDs.length) {
+      products = await strapi.db.query('api::product.product').findMany({
+        where: {
+          $or: productsIDs
+        },
+        select: ['id', 'price', 'salePrice']
+      })
+    }
+
+    return products.reduce((sum, product) => {
+      const item = items.find((_item) => _item.product === product.id)
+      const price = product.salePrice ?? product.price
+
+      return sum + +item.quantity * +price
+    }, 0)
+  },
   async addOrUpdateItem(cartUuid: string, data) {
     const existsCart = await strapi.db.query('api::cart.cart').findOne({
       where: {
@@ -59,7 +84,8 @@ export default factories.createCoreService('api::cart.cart', ({strapi}) => ({
 
     return await strapi.entityService.update('api::cart.cart', existsCart.id, {
       data: {
-        items: cartItems
+        items: cartItems,
+        sum: +(await this.getSumByItems(cartItems))
       },
       fields: ['id', 'sum'],
       populate: {
@@ -105,7 +131,8 @@ export default factories.createCoreService('api::cart.cart', ({strapi}) => ({
 
     return await strapi.entityService.update('api::cart.cart', existsCart.id, {
       data: {
-        items: cartItems
+        items: cartItems,
+        sum: +(await this.getSumByItems(cartItems))
       },
       fields: ['id', 'sum'],
       populate: {

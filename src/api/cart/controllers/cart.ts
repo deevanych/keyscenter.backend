@@ -17,12 +17,24 @@ export default factories.createCoreController('api::cart.cart', ({strapi}) => ({
         where: {
           uuid: ctx.params.id
         },
+        select: ['uuid', 'sum'],
         populate: {
           items: {
             select: ['id', 'quantity'],
             populate: {
               product: {
-                select: ['id', 'salePrice']
+                product_category: {
+                  select: ['slug']
+                },
+                populate: {
+                  images: {
+                    select: [''],
+                    populate: {
+                      formats: true
+                    }
+                  }
+                },
+                select: ['id', 'price', 'salePrice', 'slug']
               }
             }
           }
