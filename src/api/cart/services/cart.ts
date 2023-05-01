@@ -10,7 +10,7 @@ import {v4} from 'uuid';
 const COMPONENT_NAME = 'cart.item'
 
 export default factories.createCoreService('api::cart.cart', ({strapi}) => ({
-  async create(params) {
+  async create() {
     const serializedParams = {
       data: {
         uuid: v4()

@@ -7,7 +7,7 @@
 import {factories} from '@strapi/strapi';
 
 export default factories.createCoreService('api::product.product', ({strapi}) => ({
-  async find(params: { populate: any }) {
+  async find() {
     const results = await strapi.db.query('api::product.product').findMany({
       select: [
         'title',
