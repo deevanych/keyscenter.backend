@@ -8,41 +8,40 @@ import {factories} from '@strapi/strapi';
 import {v4} from 'uuid';
 
 const COMPONENT_NAME = 'cart.item'
-
-export default factories.createCoreService('api::cart.cart', ({strapi}) => ({
-  async create() {
-    const serializedParams = {
-      data: {
-        uuid: v4()
-      },
-      fields: ['uuid', 'sum'],
+const SERIALIZED_PARAMS = {
+  fields: ['uuid', 'sum'],
+  populate: {
+    items: {
+      fields: ['quantity'],
       populate: {
-        items: {
-          fields: ['quantity'],
+        product: {
           populate: {
-            product: {
+            product_category: {
+              fields: ['slug']
+            },
+            images: {
+              fields: ['formats'],
               populate: {
-                product_category: {
-                  fields: ['slug']
-                },
-                images: {
-                  fields: ['formats'],
-                  populate: {
-                    formats: true
-                  }
-                }
-              },
-              fields: ['price', 'salePrice', 'slug', 'title']
+                formats: true
+              }
             }
-          }
+          },
+          fields: ['price', 'salePrice', 'slug', 'title']
         }
       }
     }
+  }
+}
 
-    return await super.create(serializedParams)
+export default factories.createCoreService('api::cart.cart', ({strapi}) => ({
+  async create() {
+    SERIALIZED_PARAMS.data = {
+      uuid: v4()
+    }
+
+    return await super.create(SERIALIZED_PARAMS)
   },
   async findOne(entityId, params) {
-    console.log(232)
     const cart = await strapi.db.query('api::cart.cart').findOne(({
       where: {
         uuid: entityId
@@ -50,52 +49,16 @@ export default factories.createCoreService('api::cart.cart', ({strapi}) => ({
       select: ['id']
     }))
     const serializedParams = {
-      ...params,
-      fields: ['uuid', 'sum'],
-      populate: {
-        items: {
-          fields: ['quantity'],
-          populate: {
-            product: {
-              populate: {
-                product_category: {
-                  fields: ['slug']
-                },
-                images: {
-                  fields: ['formats']
-                }
-              },
-              fields: ['price', 'salePrice', 'slug', 'title']
-            }
-          }
-        }
-      }
+      ...SERIALIZED_PARAMS,
+      ...params
     }
 
     return await super.findOne(cart.id, serializedParams)
   },
   async update(entityId, params) {
     const serializedParams = {
-      ...params,
-      fields: ['uuid', 'sum'],
-      populate: {
-        items: {
-          fields: ['quantity'],
-          populate: {
-            product: {
-              populate: {
-                product_category: {
-                  fields: ['slug']
-                },
-                images: {
-                  fields: ['formats']
-                }
-              },
-              fields: ['price', 'salePrice', 'slug', 'title']
-            }
-          }
-        }
-      }
+      ...SERIALIZED_PARAMS,
+      ...params
     }
 
     return await super.update(entityId, serializedParams);
