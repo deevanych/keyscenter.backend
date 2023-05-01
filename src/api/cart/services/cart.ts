@@ -32,7 +32,7 @@ export default factories.createCoreService('api::cart.cart', ({strapi}) => ({
                   }
                 }
               },
-              fields: ['price', 'salePrice', 'slug']
+              fields: ['price', 'salePrice', 'slug', 'title']
             }
           }
         }
@@ -65,7 +65,7 @@ export default factories.createCoreService('api::cart.cart', ({strapi}) => ({
                   fields: ['formats']
                 }
               },
-              fields: ['price', 'salePrice', 'slug']
+              fields: ['price', 'salePrice', 'slug', 'title']
             }
           }
         }
@@ -91,7 +91,7 @@ export default factories.createCoreService('api::cart.cart', ({strapi}) => ({
                   fields: ['formats']
                 }
               },
-              fields: ['price', 'salePrice', 'slug']
+              fields: ['price', 'salePrice', 'slug', 'title']
             }
           }
         }
