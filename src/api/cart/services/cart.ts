@@ -7,6 +7,21 @@
 import {factories} from '@strapi/strapi';
 import {v4} from 'uuid';
 
+const serializeCart = (cart) => {
+  return {
+    ...cart,
+    items: cart.items.map((item) => {
+      item.product.category = item.product.product_category.slug
+      item.product.thumbnail = item.product.images[0].formats.thumbnail.url
+
+      delete item.product.product_category
+      delete item.product.images
+
+      return item
+    })
+  }
+}
+
 const COMPONENT_NAME = 'cart.item'
 const SERIALIZED_PARAMS = {
   fields: ['uuid', 'sum'],
@@ -53,7 +68,7 @@ export default factories.createCoreService('api::cart.cart', ({strapi}) => ({
       ...params
     }
 
-    return await super.findOne(cart.id, serializedParams)
+    return serializeCart(await super.findOne(cart.id, serializedParams))
   },
   async update(entityId, params) {
     const serializedParams = {
@@ -61,7 +76,7 @@ export default factories.createCoreService('api::cart.cart', ({strapi}) => ({
       ...params
     }
 
-    return await super.update(entityId, serializedParams);
+    return serializeCart(await super.update(entityId, serializedParams));
   },
   async getSumByItems(items) {
     const productsIDs = items.map((item) => {
