@@ -13,9 +13,11 @@ const serializeCart = (cart) => {
     items: cart.items.map((item) => {
       item.product.category = item.product.product_category.slug
       item.product.thumbnail = item.product.images[0].formats.thumbnail.url
+      item.availableCount = item.product.product_keys.length
 
       delete item.product.product_category
       delete item.product.images
+      delete item.product.product_keys
 
       return item
     })
@@ -31,6 +33,21 @@ const SERIALIZED_PARAMS = {
       populate: {
         product: {
           populate: {
+            product_keys: {
+              fields: ['id'],
+              where: {
+                $and: [
+                  {
+                    published_at: {
+                      $notNull: true
+                    }
+                  },
+                  {
+                    order: null
+                  },
+                ]
+              }
+            },
             product_category: {
               fields: ['slug']
             },
