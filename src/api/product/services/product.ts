@@ -30,10 +30,7 @@ export default factories.createCoreService('api::product.product', ({strapi}) =>
                 published_at: {
                   $notNull: true
                 }
-              },
-              {
-                order: null
-              },
+              }
             ]
           }
         }
@@ -79,10 +76,7 @@ export default factories.createCoreService('api::product.product', ({strapi}) =>
                   published_at: {
                     $notNull: true
                   }
-                },
-                {
-                  order: null
-                },
+                }
               ]
             }
           }

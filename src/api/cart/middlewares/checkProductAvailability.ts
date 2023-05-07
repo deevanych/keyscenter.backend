@@ -6,7 +6,7 @@ export default (config, {strapi}) => {
     const {productId, quantity} = ctx.request.body.data
 
     const product = await strapi.db.query('api::product.product').findOne({
-      where: {id: productId},
+      where: { id: productId },
       select: ['id'],
       populate: {
         product_keys: {
@@ -17,10 +17,7 @@ export default (config, {strapi}) => {
                 published_at: {
                   $notNull: true
                 }
-              },
-              {
-                order: null
-              },
+              }
             ]
           }
         }

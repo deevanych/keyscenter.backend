@@ -24,12 +24,6 @@
       "target": "api::product.product",
       "private": true,
       "inversedBy": "product_keys"
-    },
-    "order": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::order.order",
-      "inversedBy": "product_keys"
     }
   }
 }
