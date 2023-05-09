@@ -22,12 +22,6 @@
       "repeatable": true,
       "component": "cart.item"
     },
-    "user": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "carts"
-    },
     "sum": {
       "type": "integer",
       "required": false,
@@ -36,10 +30,6 @@
     },
     "paid_at": {
       "type": "datetime"
-    },
-    "transaction_id": {
-      "type": "string",
-      "unique": true
     }
   }
 }

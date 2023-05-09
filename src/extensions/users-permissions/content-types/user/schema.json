@@ -66,10 +66,10 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "carts": {
+    "orders": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::cart.cart",
+      "target": "api::order.order",
       "mappedBy": "user"
     }
   }

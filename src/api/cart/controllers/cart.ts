@@ -18,12 +18,6 @@ export default factories.createCoreController('api::cart.cart', ({strapi}) => ({
     },
     async deleteItem(ctx) {
       return await strapi.service('api::cart.cart').deleteItem(ctx.params.cartId, ctx.params.itemId)
-    },
-    async checkAvailability(ctx) {
-      return await strapi.service('api::cart.cart').checkAvailability(ctx.params.cartId, ctx.request.body.email)
-    },
-    async orderStatusHook(ctx) {
-      return await strapi.service('api::cart.cart').orderStatusHook(ctx)
     }
   })
 );

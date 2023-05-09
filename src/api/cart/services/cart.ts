@@ -6,10 +6,6 @@
 
 import {factories} from '@strapi/strapi';
 import {v4} from 'uuid';
-import utils from '@strapi/utils';
-import {createHash} from "crypto";
-
-const {ForbiddenError} = utils.errors;
 
 const serializeCart = (cart) => {
   return {
@@ -74,74 +70,18 @@ export default factories.createCoreService('api::cart.cart', ({strapi}) => ({
 
     return await super.create(SERIALIZED_PARAMS)
   },
-  async checkAvailability(entityId, email) {
-    let user = await strapi.db.query('plugin::users-permissions.user').findOne({
-      where: {
-        email
-      }
-    })
-
-    if (!user) {
-      user = await strapi.db.query('plugin::users-permissions.user').create({
-        data: {
-          username: email,
-          email
-        }
-      })
-    }
-
-    const cart = await strapi.db.query('api::cart.cart').update(({
-      where: {
-        uuid: entityId
-      },
-      data: {
-        user: user.id,
-      },
-      select: ['id', 'sum'],
-      populate: {
-        items: {
-          select: ['quantity'],
-          populate: {
-            product: {
-              select: ['id', 'title'],
-              populate: {
-                product_keys: {
-                  select: ['id'],
-                  where: {
-                    $and: [
-                      {
-                        published_at: {
-                          $notNull: true
-                        }
-                      }
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }))
-
-    cart.items.forEach((item) => {
-      if (item.quantity > item.product.product_keys.length) {
-        throw new ForbiddenError(`${item.product.title} доступно в наличии: ${item.product.product_keys.length}`);
-      }
-    })
-
-    return {
-      cartId: entityId,
-      sum: cart.sum
-    };
-  },
   async findOne(entityId, params) {
     const cart = await strapi.db.query('api::cart.cart').findOne(({
       where: {
         uuid: entityId
       },
-      select: ['id']
+      select: ['id', 'paid_at']
     }))
+
+    if (!cart || cart.paid_at) {
+      return this.create()
+    }
+
     const serializedParams = {
       ...SERIALIZED_PARAMS,
       ...params
@@ -259,69 +199,5 @@ export default factories.createCoreService('api::cart.cart', ({strapi}) => ({
       })
 
     return await this.updateItems(cart.id, cartItems)
-  },
-  async orderStatusHook (ctx) {
-      try {
-        const {body} = ctx.request
-        const cartId = body.label
-        const validationParams = [
-          body.notification_type,
-          body.operation_id,
-          body.amount,
-          body.currency,
-          body.datetime,
-          body.sender,
-          body.codepro,
-          process.env.YOOUMONEY_SECRET,
-          body.label
-        ]
-        const hashInstance = createHash('sha1')
-        hashInstance.update(validationParams.join('&'))
-        const hexString = hashInstance.digest('hex')
-
-        if (body.sha1_hash !== hexString) {
-          throw 'Hashes are not equals'
-        }
-
-        const cart = await strapi.db.query('api::cart.cart').update({
-          where: {
-            uuid: cartId
-          },
-          data: {
-            paid_at: body.datetime,
-            transaction_id: body.operation_id
-          },
-          populate: {
-            items: {
-              select: ['quantity'],
-              populate: {
-                product: {
-                  select: ['id', 'title'],
-                  populate: {
-                    product_keys: {
-                      select: ['id'],
-                      where: {
-                        $and: [
-                          {
-                            published_at: {
-                              $notNull: true
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        })
-
-        return true
-      } catch (e) {
-        throw new utils.errors.ForbiddenError(e);
-      }
-
-      return true
-    }
+  }
 }));
