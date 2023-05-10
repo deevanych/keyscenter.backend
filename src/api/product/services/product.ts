@@ -40,9 +40,17 @@ export default factories.createCoreService('api::product.product', ({strapi}) =>
     return {results}
   },
   async findOne(slug: string, params: { populate: any }) {
-    return await strapi.db.query('api::product.product').findOne({
+    const { views } = await strapi.db.query('api::product.product').findOne({
+      where: {slug},
+      select: ['views']
+    })
+
+    return await strapi.db.query('api::product.product').update({
       ...params,
       where: {slug},
+      data: {
+        views: +views + 1
+      },
       select: [
         'title',
         'price',
