@@ -1,4 +1,7 @@
 export default () => ({
+  "content-versioning": {
+    enabled:  true,
+  },
   redis: {
     enabled: +process.env.CACHE_IS_ENABLED,
     config: {
