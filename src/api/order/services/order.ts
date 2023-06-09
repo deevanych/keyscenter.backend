@@ -6,7 +6,7 @@
 
 import { factories } from '@strapi/strapi';
 import {v4} from "uuid";
-import {createHash} from "crypto";
+import { createHash, type Hash } from "crypto";
 import utils from "@strapi/utils";
 const { NotFoundError, ForbiddenError } = utils.errors
 
@@ -79,26 +79,34 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
   async orderStatusHook (ctx) {
     try {
       const {body} = ctx.request
-      const order_uuid = body.label
+      const order_uuid = body.orderid
       const validationParams = [
-        body.notification_type,
-        body.operation_id,
-        body.amount,
-        body.currency,
-        body.datetime,
-        body.sender,
-        body.codepro,
-        process.env.YOOUMONEY_SECRET,
-        body.label
+        body.id,
+        body.sum,
+        body.clientid,
+        body.orderid,
+        process.env.PAYKEEPER_SECRET
       ]
-      const hashInstance = createHash('sha1')
-      hashInstance.update(validationParams.join('&'))
+      const hashInstance: Hash = createHash('md5')
+      hashInstance.update(validationParams.join(''))
       const hexString = hashInstance.digest('hex')
 
-      if (body.sha1_hash !== hexString) {
+      if (body.key !== hexString) {
         throw new ForbiddenError('Hashes are not equals');
       }
 
+      const order = await strapi.db.query('api::order.order').findOne({
+        where: {
+          uuid: order_uuid
+        },
+        select: ['sum']
+      })
+
+      if (+order.sum !== +body.sum) {
+        throw new ForbiddenError('Sum are not equals');
+      }
+
+      // get paid_at and sum for lifecycle 'afterUpdate'
       await strapi.db.query('api::order.order').update({
         where: {
           uuid: order_uuid
@@ -110,8 +118,8 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
           }
         },
         data: {
-          paid_at: body.datetime,
-          transaction_id: body.operation_id
+          paid_at: body.obtain_datetime,
+          transaction_id: body.id
         }
       })
 
@@ -119,7 +127,5 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
     } catch (e) {
       throw new ForbiddenError(e);
     }
-
-    return 'success'
   }
 }));
