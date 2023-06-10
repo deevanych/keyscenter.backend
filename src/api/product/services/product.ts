@@ -21,7 +21,7 @@ export default factories.createCoreService('api::product.product', ({strapi}) =>
           select: ['formats']
         },
         product_category: {
-          select: ['slug', 'title']
+          select: ['slug', 'title', 'id']
         },
         product_keys: {
           select: ['id'],
