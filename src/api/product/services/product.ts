@@ -12,6 +12,7 @@ export default factories.createCoreService('api::product.product', ({strapi}) =>
       select: [
         'title',
         'price',
+        'description',
         'salePrice',
         'slug',
       ],
