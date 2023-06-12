@@ -5,9 +5,11 @@
 // @ts-nocheck
 
 import { factories } from '@strapi/strapi';
-import {v4} from "uuid";
-import {createHash} from "crypto";
+import { v4 } from "uuid";
+import { createHash } from "crypto";
 import utils from "@strapi/utils";
+import fetch from 'node-fetch';
+
 const { NotFoundError, ForbiddenError } = utils.errors
 
 export default factories.createCoreService('api::order.order', ({ strapi }) => ({
@@ -65,7 +67,7 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
       productKeysIds.push(...productKeys.map((key) => key.id))
     }
 
-    return await strapi.db.query('api::order.order').create({
+    const order = await strapi.db.query('api::order.order').create({
       data: {
         uuid: v4(),
         sum: cart.sum,
@@ -75,6 +77,36 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
       },
       select: ['uuid', 'sum']
     })
+    const paymentUrl = new URL(process.env.PAYMENT_RETURN_PATH, process.env.FRONTEND_URL)
+    paymentUrl.searchParams.append('orderId', order.uuid)
+
+    const payment = await fetch('https://api.yookassa.ru/v3/payments', {
+      method: 'POST',
+      headers: {
+        'Idempotence-Key': order.uuid,
+        'Content-Type': 'application/json',
+        'Authorization': process.env.YOOKASSA_AUTH
+      },
+      body: JSON.stringify({
+        amount: {
+          value: order.sum.toFixed(2),
+          currency: 'RUB'
+        },
+        confirmation: {
+          type: 'redirect',
+          return_url: paymentUrl.href
+        },
+        payment_method_data: {
+          type: 'bank_card'
+        },
+        description: `Оплата заказа №${order.uuid} на сумму ${order.sum} рублей`,
+        metadata: {
+          order: order.uuid
+        }
+      })
+    });
+
+    return await payment.json()
   },
   async orderStatusHook (ctx) {
     try {
