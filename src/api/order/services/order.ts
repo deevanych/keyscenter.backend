@@ -144,5 +144,10 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
     }
 
     return 'success'
+  },
+  async findOne(uuid: string) {
+    return await strapi.db.query('api::order.order').findOne({
+      where: {uuid}
+    })
   }
 }));
