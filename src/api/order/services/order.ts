@@ -110,44 +110,35 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
   },
   async orderStatusHook (ctx) {
     try {
-      const {body} = ctx.request
-      const order_uuid = body.label
-      const validationParams = [
-        body.notification_type,
-        body.operation_id,
-        body.amount,
-        body.currency,
-        body.datetime,
-        body.sender,
-        body.codepro,
-        process.env.YOOUMONEY_SECRET,
-        body.label
-      ]
-      const hashInstance = createHash('sha1')
-      hashInstance.update(validationParams.join('&'))
-      const hexString = hashInstance.digest('hex')
+      const {body, query} = ctx.request
 
-      if (body.sha1_hash !== hexString) {
-        throw new ForbiddenError('Hashes are not equals');
+      if (query.secret !== process.env.PAYMENT_HOOK_SECRET) {
+        throw new ForbiddenError('Notification has been hacked');
       }
 
-      await strapi.db.query('api::order.order').update({
-        where: {
-          uuid: order_uuid
-        },
-        select: ['paid_at', 'sum'],
-        populate: {
-          cart: {
-            select: ['uuid']
-          }
-        },
-        data: {
-          paid_at: body.datetime,
-          transaction_id: body.operation_id
-        }
-      })
+      if (body.type === 'notification' && body.event === 'payment.succeeded') {
+        const order_uuid = body.object.metadata.order
 
-      return 'success'
+        await strapi.db.query('api::order.order').update({
+          where: {
+            uuid: order_uuid
+          },
+          select: ['paid_at', 'sum'],
+          populate: {
+            cart: {
+              select: ['uuid']
+            }
+          },
+          data: {
+            paid_at: body.object.captured_at,
+            transaction_id: body.object.id
+          }
+        })
+
+        return 'success'
+      } else {
+        throw new ForbiddenError('Notification has been hacked');
+      }
     } catch (e) {
       throw new ForbiddenError(e);
     }
