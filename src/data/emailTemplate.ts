@@ -25,12 +25,10 @@ const emailText = (products, orderSum) => {
     "  <mj-body>\n" +
     "    <mj-section>\n" +
     "      <mj-column>\n" +
-    "        <mj-image align=\"left\" width=\"300px\" src=\"https://www.strapi.keyscenter.ru/uploads/keycenter_486ab83cec.png\"></mj-image>\n" +
+    "        <mj-image align=\"left\" width=\"300px\" src=\"https://www.strapi.keyscenter.ru/uploads/keycenter_c_fff8b6b89b.png\"></mj-image>\n" +
     "        <mj-spacer height=\"30px\" />\n" +
     "        <mj-text font-size=\"40px\" color=\"#cf5b84\" font-family=\"Trebuchet MS\" font-weight=\"bold\">Спасибо за покупку!</mj-text>\n" +
     "        <mj-text font-size=\"20px\" color=\"#945bcf\" font-family=\"Trebuchet MS\">Вы получили это письмо, потому что недавно совершили заказ в магазине цифровых ключей <a target=\"_blank\" href=\"https://www.keyscenter.ru\">keyscenter.ru</a></mj-text>\n" +
-    "        <mj-spacer height=\"30px\" />\n" +
-    "        <mj-image align=\"left\" width=\"200px\" src=\"https://www.strapi.keyscenter.ru/uploads/divider_c883188f06.png\"></mj-image>\n" +
     "        <mj-spacer height=\"20px\" />\n" +
     "        <mj-text font-size=\"30px\" font-family=\"Trebuchet MS\" font-weight=\"bold\">Содержимое заказа:</mj-text>\n" +
     "        <mj-table>\n" +
