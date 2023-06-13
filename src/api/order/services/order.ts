@@ -5,9 +5,11 @@
 // @ts-nocheck
 
 import { factories } from '@strapi/strapi';
-import {v4} from "uuid";
-import {createHash} from "crypto";
+import { v4 } from "uuid";
+import { createHash } from "crypto";
 import utils from "@strapi/utils";
+import fetch from 'node-fetch';
+
 const { NotFoundError, ForbiddenError } = utils.errors
 
 export default factories.createCoreService('api::order.order', ({ strapi }) => ({
@@ -65,7 +67,7 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
       productKeysIds.push(...productKeys.map((key) => key.id))
     }
 
-    return await strapi.db.query('api::order.order').create({
+    const order = await strapi.db.query('api::order.order').create({
       data: {
         uuid: v4(),
         sum: cart.sum,
@@ -75,51 +77,77 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
       },
       select: ['uuid', 'sum']
     })
+    const paymentUrl = new URL(process.env.PAYMENT_RETURN_PATH, process.env.FRONTEND_URL)
+    paymentUrl.searchParams.append('orderId', order.uuid)
+
+    const payment = await fetch('https://api.yookassa.ru/v3/payments', {
+      method: 'POST',
+      headers: {
+        'Idempotence-Key': order.uuid,
+        'Content-Type': 'application/json',
+        'Authorization': process.env.YOOKASSA_AUTH
+      },
+      body: JSON.stringify({
+        amount: {
+          value: order.sum.toFixed(2),
+          currency: 'RUB'
+        },
+        confirmation: {
+          type: 'redirect',
+          return_url: paymentUrl.href
+        },
+        payment_method_data: {
+          type: 'bank_card'
+        },
+        description: `Оплата заказа №${order.uuid} на сумму ${order.sum} рублей`,
+        metadata: {
+          order: order.uuid
+        }
+      })
+    });
+
+    return await payment.json()
   },
   async orderStatusHook (ctx) {
     try {
-      const {body} = ctx.request
-      const order_uuid = body.label
-      const validationParams = [
-        body.notification_type,
-        body.operation_id,
-        body.amount,
-        body.currency,
-        body.datetime,
-        body.sender,
-        body.codepro,
-        process.env.YOOUMONEY_SECRET,
-        body.label
-      ]
-      const hashInstance = createHash('sha1')
-      hashInstance.update(validationParams.join('&'))
-      const hexString = hashInstance.digest('hex')
+      const {body, query} = ctx.request
 
-      if (body.sha1_hash !== hexString) {
-        throw new ForbiddenError('Hashes are not equals');
+      if (query.secret !== process.env.PAYMENT_HOOK_SECRET) {
+        throw new ForbiddenError('Notification has been hacked');
       }
 
-      await strapi.db.query('api::order.order').update({
-        where: {
-          uuid: order_uuid
-        },
-        select: ['paid_at', 'sum'],
-        populate: {
-          cart: {
-            select: ['uuid']
-          }
-        },
-        data: {
-          paid_at: body.datetime,
-          transaction_id: body.operation_id
-        }
-      })
+      if (body.type === 'notification' && body.event === 'payment.succeeded') {
+        const order_uuid = body.object.metadata.order
 
-      return 'success'
+        await strapi.db.query('api::order.order').update({
+          where: {
+            uuid: order_uuid
+          },
+          select: ['paid_at', 'sum'],
+          populate: {
+            cart: {
+              select: ['uuid']
+            }
+          },
+          data: {
+            paid_at: body.object.captured_at,
+            transaction_id: body.object.id
+          }
+        })
+
+        return 'success'
+      } else {
+        throw new ForbiddenError('Notification has been hacked');
+      }
     } catch (e) {
       throw new ForbiddenError(e);
     }
 
     return 'success'
+  },
+  async findOne(uuid: string) {
+    return await strapi.db.query('api::order.order').findOne({
+      where: {uuid}
+    })
   }
 }));
