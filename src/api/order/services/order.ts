@@ -53,6 +53,7 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
 
       return {
         description: item.product.title,
+        payment_subject: 'commodity',
         amount: {
           value: price.toFixed(2),
           currency: 'RUB'
