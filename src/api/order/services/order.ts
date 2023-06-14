@@ -59,7 +59,8 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
           currency: 'RUB'
         },
         vat_code: 4,
-        quantity: item.quantity
+        quantity: item.quantity,
+        payment_mode: "full_payment"
       }
     })
 
@@ -119,6 +120,9 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
           order: order.uuid
         },
         receipt: {
+          customer: {
+            email
+          },
           items: receiptItems
         }
       })
