@@ -112,9 +112,6 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
           type: 'redirect',
           return_url: paymentUrl.href
         },
-        payment_method_data: {
-          type: 'bank_card'
-        },
         description: `Оплата заказа №${order.uuid} на сумму ${order.sum} рублей`,
         metadata: {
           order: order.uuid
