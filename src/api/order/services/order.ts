@@ -41,10 +41,24 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
           select: ['quantity'],
           populate: {
             product: {
-              select: ['id']
+              select: ['id', 'title', 'salePrice', 'price']
             }
           }
         }
+      }
+    })
+
+    const receiptItems = cart.items.map(item => {
+      const price = item.product.salePrice ?? item.product.price
+
+      return {
+        description: item.product.title,
+        amount: {
+          value: price.toFixed(2),
+          currency: 'RUB'
+        },
+        vat_code: 4,
+        quantity: item.quantity
       }
     })
 
@@ -102,6 +116,9 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
         description: `Оплата заказа №${order.uuid} на сумму ${order.sum} рублей`,
         metadata: {
           order: order.uuid
+        },
+        receipt: {
+          items: receiptItems
         }
       })
     });
