@@ -112,6 +112,7 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
           type: 'redirect',
           return_url: paymentUrl.href
         },
+        capture: true,
         description: `Оплата заказа №${order.uuid} на сумму ${order.sum} рублей`,
         metadata: {
           order: order.uuid
