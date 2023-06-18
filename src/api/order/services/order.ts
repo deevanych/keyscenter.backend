@@ -6,11 +6,14 @@
 
 import { factories } from '@strapi/strapi';
 import { v4 } from "uuid";
-import { createHash } from "crypto";
 import utils from "@strapi/utils";
 import fetch from 'node-fetch';
+import { Payment, YooCheckout } from '@a2seven/yoo-checkout';
+import { OrderAPI } from '../shop-frontend/api/order';
+import IPaymentResponse = OrderAPI.IPaymentResponse;
 
 const { NotFoundError, ForbiddenError } = utils.errors
+const checkout = new YooCheckout({ shopId: process.env.YOOKASSA_SHOP_ID, secretKey: process.env.YOOKASSA_SHOP_SECRET });
 
 export default factories.createCoreService('api::order.order', ({ strapi }) => ({
   async create (ctx) {
@@ -95,38 +98,31 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
     })
     const paymentUrl = new URL(process.env.PAYMENT_RETURN_PATH, process.env.FRONTEND_URL)
     paymentUrl.searchParams.append('orderId', order.uuid)
-
-    const payment = await fetch('https://api.yookassa.ru/v3/payments', {
-      method: 'POST',
-      headers: {
-        'Idempotence-Key': order.uuid,
-        'Content-Type': 'application/json',
-        'Authorization': process.env.YOOKASSA_AUTH
+    const paymentBody = {
+      amount: {
+        value: order.sum.toFixed(2),
+        currency: 'RUB'
       },
-      body: JSON.stringify({
-        amount: {
-          value: order.sum.toFixed(2),
-          currency: 'RUB'
+      confirmation: {
+        type: 'redirect',
+        return_url: paymentUrl.href
+      },
+      capture: true,
+      description: `Оплата заказа №${order.uuid} на сумму ${order.sum} рублей`,
+      metadata: {
+        order: order.uuid
+      },
+      receipt: {
+        customer: {
+          email
         },
-        confirmation: {
-          type: 'redirect',
-          return_url: paymentUrl.href
-        },
-        capture: true,
-        description: `Оплата заказа №${order.uuid} на сумму ${order.sum} рублей`,
-        metadata: {
-          order: order.uuid
-        },
-        receipt: {
-          customer: {
-            email
-          },
-          items: receiptItems
-        }
-      })
-    });
+        items: receiptItems
+      }
+    }
 
-    return await payment.json()
+    const payment = await checkout.createPayment(paymentBody, order.uuid)
+
+    return JSON.parse(JSON.stringify(payment))
   },
   async orderStatusHook (ctx) {
     try {
