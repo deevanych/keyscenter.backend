@@ -20,6 +20,9 @@ export default factories.createCoreService('api::product.product', ({strapi}) =>
         images: {
           select: ['formats']
         },
+        reviews: {
+          select: ['text', 'is_positive', 'created_at']
+        },
         product_category: {
           select: ['slug', 'title', 'id']
         },
@@ -64,6 +67,9 @@ export default factories.createCoreService('api::product.product', ({strapi}) =>
         populate: {
           images: {
             select: ['formats']
+          },
+          reviews: {
+            select: ['text', 'is_positive', 'created_at']
           },
           platforms: {
             select: ['title']

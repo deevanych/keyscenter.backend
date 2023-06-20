@@ -4,7 +4,8 @@
   "info": {
     "singularName": "platform",
     "pluralName": "platforms",
-    "displayName": "Platform"
+    "displayName": "Platform",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -16,9 +17,9 @@
       "unique": true,
       "required": true
     },
-    "product": {
+    "products": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "manyToMany",
       "target": "api::product.product",
       "inversedBy": "platforms"
     }
