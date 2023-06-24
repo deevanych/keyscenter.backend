@@ -4,13 +4,12 @@
 
 // @ts-nocheck
 
+// todo create types
+
 import { factories } from '@strapi/strapi';
 import { v4 } from "uuid";
 import utils from "@strapi/utils";
-import fetch from 'node-fetch';
-import { Payment, YooCheckout } from '@a2seven/yoo-checkout';
-import { OrderAPI } from '../shop-frontend/api/order';
-import IPaymentResponse = OrderAPI.IPaymentResponse;
+import { YooCheckout } from '@a2seven/yoo-checkout';
 
 const { NotFoundError, ForbiddenError } = utils.errors
 const checkout = new YooCheckout({ shopId: process.env.YOOKASSA_SHOP_ID, secretKey: process.env.YOOKASSA_SHOP_SECRET });
@@ -164,6 +163,12 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
   async findOne(uuid: string) {
     return await strapi.db.query('api::order.order').findOne({
       where: {uuid}
+    })
+  },
+  async update (uuid: string, data: {}){
+    return await strapi.db.query('api::order.order').update({
+      where: { uuid },
+      ...data
     })
   }
 }));

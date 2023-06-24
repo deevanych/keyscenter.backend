@@ -43,6 +43,11 @@
     },
     "paid_at": {
       "type": "datetime"
+    },
+    "is_goal_sent": {
+      "type": "boolean",
+      "default": false,
+      "required": false
     }
   }
 }
