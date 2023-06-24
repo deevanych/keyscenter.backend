@@ -34,16 +34,12 @@ const SERIALIZED_PARAMS = {
         product: {
           populate: {
             product_keys: {
-              fields: ['id'],
-              where: {
-                $and: [
-                  {
-                    published_at: {
-                      $notNull: true
-                    }
-                  }
-                ]
-              }
+              fields: ['id', 'published_at'],
+              filters: {
+                publishedAt: {
+                  $notNull: true
+                }
+              },
             },
             product_category: {
               fields: ['slug']
