@@ -69,8 +69,8 @@ export default factories.createCoreService('api::product.product', ({strapi}) =>
             select: ['formats']
           },
           reviews: {
-            sort: {
-              created_at: 'desc'
+            orderBy: {
+              createdAt: 'desc'
             },
             select: ['text', 'is_positive', 'created_at']
           },
