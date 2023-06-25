@@ -25,7 +25,10 @@ export default factories.createCoreService('api::review.review', ({ strapi }) =>
       where: {
         product: ctx.data.product_id
       },
-      select: ['text', 'is_positive', 'created_at']
+      select: ['text', 'is_positive', 'created_at'],
+      orderBy: {
+        createdAt: 'desc'
+      }
     })
   }
 }));
