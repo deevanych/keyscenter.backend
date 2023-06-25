@@ -42,13 +42,20 @@ export default (config, { strapi }: { strapi: Strapi }) => {
           }
         },
         reviews: {
-          select: ['id']
+          select: [],
+          where: {
+            product: product_id
+          }
         }
       }
     })
 
     if (!user) {
       ctx.assert(ctx.state.user, 404, 'Пользователь не найден');
+    }
+
+    if (user.reviews.length > 0) {
+      ctx.assert(ctx.state.user, 403, 'Вы уже оставили отзыв на этот товар');
     }
 
     const boughtProductsIds: number[] = []
@@ -62,8 +69,6 @@ export default (config, { strapi }: { strapi: Strapi }) => {
     if (!boughtProductsIds.includes(product_id)) {
       ctx.assert(ctx.state.user, 404, 'Вы не покупали этот товар');
     }
-
-    console.log(user)
 
     await next();
   };
