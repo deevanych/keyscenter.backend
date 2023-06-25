@@ -12,13 +12,20 @@ export default factories.createCoreService('api::review.review', ({ strapi }) =>
       }
     })
 
-    return strapi.db.query('api::review.review').create({
+    await strapi.db.query('api::review.review').create({
       data: {
         text: ctx.data.comment,
         user: user.id,
         product: ctx.data.product_id,
         is_positive: ctx.data.is_positive
       }
+    })
+
+    return await strapi.db.query('api::review.review').findMany({
+      where: {
+        product: ctx.data.product_id
+      },
+      select: ['text', 'is_positive', 'created_at']
     })
   }
 }));
