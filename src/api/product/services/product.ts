@@ -72,6 +72,11 @@ export default factories.createCoreService('api::product.product', ({strapi}) =>
             orderBy: {
               createdAt: 'desc'
             },
+            where: {
+              publishedAt: {
+                $notNull: true
+              }
+            },
             select: ['text', 'is_positive', 'created_at']
           },
           platforms: {

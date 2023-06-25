@@ -40,6 +40,9 @@ export default (config, { strapi }: { strapi: Strapi }) => {
               }
             }
           }
+        },
+        reviews: {
+          select: ['id']
         }
       }
     })
@@ -59,6 +62,8 @@ export default (config, { strapi }: { strapi: Strapi }) => {
     if (!boughtProductsIds.includes(product_id)) {
       ctx.assert(ctx.state.user, 404, 'Вы не покупали этот товар');
     }
+
+    console.log(user)
 
     await next();
   };

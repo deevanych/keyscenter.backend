@@ -23,7 +23,10 @@ export default factories.createCoreService('api::review.review', ({ strapi }) =>
 
     return await strapi.db.query('api::review.review').findMany({
       where: {
-        product: ctx.data.product_id
+        product: ctx.data.product_id,
+        publishedAt: {
+          $notNull: true
+        }
       },
       select: ['text', 'is_positive', 'created_at'],
       orderBy: {
