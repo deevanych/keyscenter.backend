@@ -2,11 +2,23 @@ import nodemailer from 'nodemailer'
 import {emailTemplate} from '../../../../data/emailTemplate'
 
 export default {
+  async beforeUpdate(event) {
+    const { where, data } = event.params
+
+    const order = await strapi.db.query('api::order.order').findOne({
+      where,
+      select: ['paid_at']
+    })
+
+    event.state = {
+      orderHasBeenPaid: order.paid_at !== data.paid_at
+    }
+  },
   async afterUpdate(event) {
-    const {result} = event
+    const { result, state } = event
 
     try {
-      if (result.paid_at) {
+      if (state.orderHasBeenPaid && result.paid_at) {
         const order = await strapi.entityService.findOne('api::order.order', result.id, {
           populate: {
             user: {
@@ -79,34 +91,41 @@ export default {
 
         console.log('Order has been paid!')
         const emailTo = order.user.email
-        // const testAccount = await nodemailer.createTestAccount();
 
-        // let transporter = nodemailer.createTransport({
-        //   host: "smtp.ethereal.email",
-        //   port: 587,
-        //   secure: false,
-        //   auth: {
-        //     user: testAccount.user, // generated ethereal user
-        //     pass: testAccount.pass, // generated ethereal password
-        //   },
-        // });
         try {
-          const transporter = nodemailer.createTransport({
-            host: "smtp.beget.com",
-            port: 25,
-            secure: false,
-            auth: {
-              user: process.env.BEGET_MAIL_LOGIN, // generated ethereal user
-              pass: process.env.BEGET_MAIL_PASSWORD, // generated ethereal password
-            },
-          });
+          const testAccount = await nodemailer.createTestAccount();
+          let transporter
 
-          await transporter.sendMail({
+          if (process.env.NODE_ENV !== 'production') {
+            transporter = nodemailer.createTransport({
+              host: "smtp.ethereal.email",
+              port: 587,
+              secure: false,
+              auth: {
+                user: testAccount.user, // generated ethereal user
+                pass: testAccount.pass, // generated ethereal password
+              },
+            });
+          } else {
+            transporter = nodemailer.createTransport({
+              host: "smtp.beget.com",
+              port: 25,
+              secure: false,
+              auth: {
+                user: process.env.BEGET_MAIL_LOGIN, // generated ethereal user
+                pass: process.env.BEGET_MAIL_PASSWORD, // generated ethereal password
+              },
+            });
+          }
+
+          const emailResult = await transporter.sendMail({
             from: "KEYSCENTER <order@keyscenter.ru>",
             to: emailTo,
             subject: "Заказ в keyscenter.ru",
             html: emailTemplate(products, result.sum)
           });
+
+          console.log(nodemailer.getTestMessageUrl(emailResult))
         } catch (e) {
           console.log(e)
         }
