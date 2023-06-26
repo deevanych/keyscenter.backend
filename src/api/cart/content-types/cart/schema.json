@@ -30,6 +30,11 @@
     },
     "paid_at": {
       "type": "datetime"
+    },
+    "coupons": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::coupon.coupon"
     }
   }
 }
