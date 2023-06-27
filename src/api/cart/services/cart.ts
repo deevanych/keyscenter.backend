@@ -54,6 +54,9 @@ const SERIALIZED_PARAMS = {
           fields: ['price', 'salePrice', 'slug', 'title']
         }
       }
+    },
+    coupons: {
+      fields: ['coupon', 'discount', 'discount_type']
     }
   }
 }
@@ -84,8 +87,7 @@ export default factories.createCoreService('api::cart.cart', ({strapi}) => ({
     }
 
     return serializeCart(await super.findOne(cart.id, serializedParams))
-  }
-  ,
+  },
   async update(entityId, params) {
     const serializedParams = {
       ...SERIALIZED_PARAMS,
