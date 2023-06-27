@@ -12,7 +12,7 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "coupon": {
+    "code": {
       "type": "string",
       "required": true,
       "unique": true,

@@ -56,7 +56,7 @@ const SERIALIZED_PARAMS = {
       }
     },
     coupons: {
-      fields: ['coupon', 'discount', 'discount_type']
+      fields: ['code', 'discount', 'discount_type']
     }
   }
 }

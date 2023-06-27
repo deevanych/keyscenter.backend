@@ -8,12 +8,12 @@ import { factories } from '@strapi/strapi'
 
 export default factories.createCoreController('api::coupon.coupon', ({ strapi }) => ({
   async apply(ctx) {
-    const { coupon: couponId } = ctx.request.body.data
+    const { code } = ctx.request.body.data
     const { cartId: uuid } = ctx.request.params
 
     const coupon = await strapi.db.query('api::coupon.coupon').findOne({
       where: {
-        coupon: couponId
+        code
       }
     })
 
