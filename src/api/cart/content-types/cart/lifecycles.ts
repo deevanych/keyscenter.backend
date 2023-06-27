@@ -10,7 +10,7 @@ export default {
         let discountAmount = coupon.discount
 
         if (coupon.discount_type === 'percent') {
-          discountAmount = result.sum / 100 * discountAmount
+          discountAmount = sum / 100 * discountAmount
         }
 
         return sum < 0 ? 0 : sum - discountAmount
