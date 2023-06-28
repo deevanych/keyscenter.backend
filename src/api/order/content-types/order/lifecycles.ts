@@ -25,7 +25,12 @@ export default {
               fields: ['email']
             },
             cart: {
-              fields: ['uuid']
+              fields: ['uuid'],
+              populate: {
+                coupons: {
+                  fields: ['id']
+                }
+              }
             },
             product_keys: {
               select: ['id'],
@@ -45,6 +50,29 @@ export default {
             }
           }
         })
+
+        if (order.cart.coupons.length > 0) {
+          const coupons = await strapi.db.query('api::coupon.coupon').findMany({
+            where: {
+              $or: order.cart.coupons.map((coupon) => {
+                return {
+                  id: coupon.id
+                }
+              })
+            }
+          })
+
+          for (const coupon of coupons) {
+            await strapi.db.query('api::coupon.coupon').update({
+              where: {
+                id: coupon.id
+              },
+              data: {
+                applies_count: +coupon.applies_count + 1
+              }
+            })
+          }
+        }
 
         const orderProducts = []
 
