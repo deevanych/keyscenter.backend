@@ -12,7 +12,7 @@ export default {
     },
     { // Path defined with a regular expression
       method: 'DELETE',
-      path: '/carts/:cartId/coupons', // Only match when the first parameter contains 2 or 3 digits.
+      path: '/carts/:cartId/coupons/:code', // Only match when the first parameter contains 2 or 3 digits.
       handler: 'coupon.cancel',
     }
   ]
