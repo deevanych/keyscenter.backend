@@ -37,7 +37,8 @@
     },
     "max_applies_count": {
       "type": "integer",
-      "min": -1
+      "min": -1,
+      "default": -1
     },
     "can_be_applied_with_other": {
       "type": "boolean",
