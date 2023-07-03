@@ -16,6 +16,7 @@
     "@strapi/plugin-i18n": "^4.11.3",
     "@strapi/plugin-users-permissions": "^4.11.3",
     "@strapi/strapi": "^4.11.3",
+    "axios": "^1.4.0",
     "html-to-text": "^9.0.5",
     "mjml": "^4.14.1",
     "mysql": "^2.18.1",
@@ -34,7 +35,8 @@
     "name": "A Strapi developer"
   },
   "strapi": {
-    "uuid": "733bb6b7-03af-4a83-b6c5-eec5a56269ed"
+    "uuid": "733bb6b7-03af-4a83-b6c5-eec5a56269ed",
+    "telemetryDisabled": true
   },
   "engines": {
     "node": ">=14.19.1 <=18.x.x",
