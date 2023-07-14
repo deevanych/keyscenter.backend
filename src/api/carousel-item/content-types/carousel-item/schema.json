@@ -1,0 +1,74 @@
+{
+  "kind": "collectionType",
+  "collectionName": "carousel_items",
+  "info": {
+    "singularName": "carousel-item",
+    "pluralName": "carousel-items",
+    "displayName": "Carousel item"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "versions": {
+      "versioned": true
+    }
+  },
+  "attributes": {
+    "header": {
+      "pluginOptions": {
+        "versions": {
+          "versioned": true
+        }
+      },
+      "type": "string",
+      "required": true
+    },
+    "subheader": {
+      "pluginOptions": {
+        "versions": {
+          "versioned": true
+        }
+      },
+      "type": "string"
+    },
+    "button_text": {
+      "pluginOptions": {
+        "versions": {
+          "versioned": true
+        }
+      },
+      "type": "string",
+      "required": true
+    },
+    "image": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false,
+      "pluginOptions": {
+        "versions": {
+          "versioned": true
+        }
+      },
+      "required": true
+    },
+    "carousel": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::carousel.carousel",
+      "inversedBy": "carousel_items"
+    },
+    "product": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::product.product"
+    },
+    "page": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::page.page"
+    }
+  }
+}
