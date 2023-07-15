@@ -24,7 +24,7 @@ export default factories.createCoreController('api::carousel.carousel', ({strapi
               select: ['url']
             },
             product: {
-              select: ['slug'],
+              select: ['slug', 'price', 'salePrice'],
               populate: {
                 product_category: {
                   select: ['slug']
