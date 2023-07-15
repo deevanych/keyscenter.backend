@@ -6,17 +6,17 @@
 
 // todo create types
 
-import { factories } from '@strapi/strapi';
-import { v4 } from "uuid";
-import utils from "@strapi/utils";
-import { YooCheckout } from '@a2seven/yoo-checkout';
+import {factories} from '@strapi/strapi';
+import {v4} from "uuid";
+import {errors} from "@strapi/utils";
+import {YooCheckout} from '@a2seven/yoo-checkout';
 
-const { NotFoundError, ForbiddenError } = utils.errors
-const checkout = new YooCheckout({ shopId: process.env.YOOKASSA_SHOP_ID, secretKey: process.env.YOOKASSA_SHOP_SECRET });
+const {NotFoundError, ForbiddenError} = errors
+const checkout = new YooCheckout({shopId: process.env.YOOKASSA_SHOP_ID, secretKey: process.env.YOOKASSA_SHOP_SECRET});
 
-export default factories.createCoreService('api::order.order', ({ strapi }) => ({
-  async create (ctx) {
-    const { cartId, email } = ctx.data
+export default factories.createCoreService('api::order.order', ({strapi}) => ({
+  async create(ctx) {
+    const {cartId, email} = ctx.data
     const productKeysIds = []
 
     let user = await strapi.db.query('plugin::users-permissions.user').findOne({
@@ -123,7 +123,7 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
 
     return JSON.parse(JSON.stringify(payment))
   },
-  async orderStatusHook (ctx) {
+  async orderStatusHook(ctx) {
     try {
       const {body, query} = ctx.request
 
@@ -165,9 +165,9 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
       where: {uuid}
     })
   },
-  async update (uuid: string, data: {}){
+  async update(uuid: string, data: {}) {
     return await strapi.db.query('api::order.order').update({
-      where: { uuid },
+      where: {uuid},
       ...data
     })
   }

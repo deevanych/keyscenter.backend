@@ -3,14 +3,15 @@
  */
 // @ts-nocheck
 
-import { Strapi } from '@strapi/strapi';
-import utils from "@strapi/utils";
-const { ForbiddenError, NotFoundError } = utils.errors;
+import {Strapi} from '@strapi/strapi';
+import {errors} from "@strapi/utils";
 
-export default (config, { strapi }: { strapi: Strapi }) => {
+const {ForbiddenError, NotFoundError} = errors;
+
+export default (config, {strapi}: { strapi: Strapi }) => {
   return async (ctx, next) => {
-    const { code } = ctx.request.body.data
-    const { cartId: uuid } = ctx.request.params
+    const {code} = ctx.request.body.data
+    const {cartId: uuid} = ctx.request.params
 
     try {
       const {

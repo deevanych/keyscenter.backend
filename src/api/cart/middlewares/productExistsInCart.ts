@@ -1,5 +1,6 @@
-const utils = require('@strapi/utils');
-const {NotFoundError} = utils.errors;
+import {errors} from '@strapi/utils'
+
+const {NotFoundError} = errors;
 
 export default (config, {strapi}) => {
   return async (ctx, next) => {

@@ -1,12 +1,13 @@
-const utils = require('@strapi/utils');
-const {NotFoundError} = utils.errors;
+import {errors} from '@strapi/utils'
+
+const {NotFoundError} = errors;
 
 export default (config, {strapi}) => {
   return async (ctx, next) => {
     const {productId, quantity} = ctx.request.body.data
 
     const product = await strapi.db.query('api::product.product').findOne({
-      where: { id: productId },
+      where: {id: productId},
       select: ['id'],
       populate: {
         product_keys: {
