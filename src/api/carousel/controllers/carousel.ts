@@ -23,6 +23,9 @@ export default factories.createCoreController('api::carousel.carousel', ({strapi
             image: {
               select: ['url']
             },
+            lottie: {
+              select: ['url']
+            },
             product: {
               select: ['slug', 'price', 'salePrice'],
               populate: {

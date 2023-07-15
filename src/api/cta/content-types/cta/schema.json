@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "carousel_items",
+  "collectionName": "ctas",
   "info": {
-    "singularName": "carousel-item",
-    "pluralName": "carousel-items",
-    "displayName": "Carousel item",
+    "singularName": "cta",
+    "pluralName": "ctas",
+    "displayName": "CTA",
     "description": ""
   },
   "options": {
@@ -25,22 +25,15 @@
       "type": "string",
       "required": true
     },
-    "subheader": {
-      "pluginOptions": {
-        "versions": {
-          "versioned": true
-        }
-      },
-      "type": "string"
-    },
-    "button_text": {
+    "handler": {
       "pluginOptions": {
         "versions": {
           "versioned": true
         }
       },
       "type": "string",
-      "required": true
+      "required": true,
+      "unique": true
     },
     "image": {
       "type": "media",
@@ -54,12 +47,6 @@
           "versioned": true
         }
       }
-    },
-    "carousel": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::carousel.carousel",
-      "inversedBy": "carousel_items"
     },
     "product": {
       "type": "relation",
@@ -79,13 +66,28 @@
       },
       "type": "text"
     },
+    "subheader": {
+      "pluginOptions": {
+        "versions": {
+          "versioned": true
+        }
+      },
+      "type": "string"
+    },
+    "button_text": {
+      "pluginOptions": {
+        "versions": {
+          "versioned": true
+        }
+      },
+      "type": "string"
+    },
     "lottie": {
-      "type": "media",
-      "multiple": false,
-      "required": false,
       "allowedTypes": [
         "files"
       ],
+      "type": "media",
+      "multiple": true,
       "pluginOptions": {
         "versions": {
           "versioned": true
