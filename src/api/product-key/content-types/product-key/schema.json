@@ -18,9 +18,9 @@
       "unique": true,
       "private": true
     },
-    "product": {
+    "products": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "manyToMany",
       "target": "api::product.product",
       "private": true,
       "inversedBy": "product_keys"

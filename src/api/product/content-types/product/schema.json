@@ -40,12 +40,6 @@
       "default": 0,
       "pluginOptions": {}
     },
-    "product_keys": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::product-key.product-key",
-      "mappedBy": "product"
-    },
     "product_category": {
       "type": "relation",
       "relation": "manyToOne",
@@ -86,6 +80,12 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::page.page"
+    },
+    "product_keys": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::product-key.product-key",
+      "mappedBy": "products"
     }
   }
 }
