@@ -57,30 +57,12 @@
       "unique": true,
       "targetField": "title"
     },
-    "views": {
-      "type": "biginteger",
-      "default": "0",
-      "min": "0",
-      "pluginOptions": {}
-    },
     "description": {
       "type": "customField",
       "options": {
         "preset": "toolbar"
       },
       "customField": "plugin::ckeditor5.CKEditor"
-    },
-    "instruction": {
-      "type": "customField",
-      "options": {
-        "preset": "toolbar"
-      },
-      "customField": "plugin::ckeditor5.CKEditor"
-    },
-    "delivery_method": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::delivery-method.delivery-method"
     },
     "product_type": {
       "type": "relation",
@@ -93,11 +75,17 @@
       "target": "api::review.review",
       "mappedBy": "product"
     },
-    "platforms": {
+    "download_link": {
+      "type": "string"
+    },
+    "activation_by_phone": {
+      "type": "boolean",
+      "default": true
+    },
+    "instruction_page": {
       "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::platform.platform",
-      "mappedBy": "products"
+      "relation": "oneToOne",
+      "target": "api::page.page"
     }
   }
 }

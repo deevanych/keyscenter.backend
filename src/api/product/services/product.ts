@@ -4,108 +4,92 @@
 
 // @ts-nocheck
 
-import {factories} from '@strapi/strapi';
+import { factories } from "@strapi/strapi";
 
-export default factories.createCoreService('api::product.product', ({strapi}) => ({
-  async find() {
-    const results = await strapi.db.query('api::product.product').findMany({
-      select: [
-        'title',
-        'price',
-        'description',
-        'salePrice',
-        'slug',
-      ],
-      populate: {
-        images: {
-          select: ['formats']
-        },
-        reviews: {
-          select: ['text', 'is_positive', 'created_at']
-        },
-        product_category: {
-          select: ['slug', 'title', 'id']
-        },
-        product_keys: {
-          select: ['id'],
-          where: {
-            $and: [
-              {
-                published_at: {
-                  $notNull: true
-                }
-              }
-            ]
-          }
-        }
-      }
-    })
-
-    return {results}
-  },
-  async findOne(slug: string, params: { populate: any }) {
-    const { views } = await strapi.db.query('api::product.product').findOne({
-      where: {slug},
-      select: ['views']
-    })
-
-    return await strapi.db.query('api::product.product').update({
-      ...params,
-      where: {slug},
-      data: {
-        views: +views + 1
-      },
-      select: [
-        'title',
-        'price',
-        'salePrice',
-        'slug',
-        'description',
-        'instruction',
-        'views'
-      ],
+export default factories.createCoreService(
+  "api::product.product",
+  ({ strapi }) => ({
+    async find() {
+      const results = await strapi.db.query("api::product.product").findMany({
+        select: ["title", "price", "description", "salePrice", "slug"],
         populate: {
           images: {
-            select: ['formats']
+            select: ["formats"],
           },
           reviews: {
-            orderBy: {
-              createdAt: 'desc'
-            },
-            where: {
-              publishedAt: {
-                $notNull: true
-              }
-            },
-            select: ['text', 'is_positive', 'created_at']
-          },
-          platforms: {
-            select: ['title']
+            select: ["text", "is_positive", "created_at"],
           },
           product_category: {
-            select: ['slug', 'title']
-          },
-          product_type: {
-            select: ['title']
-          },
-          delivery_method: {
-            select: ['title']
+            select: ["slug", "title", "id"],
           },
           product_keys: {
-            select: ['id'],
+            select: ["id"],
             where: {
               $and: [
                 {
                   published_at: {
-                    $notNull: true
-                  }
-                }
-              ]
-            }
-          }
-        }
-      })
-    }
-  })
-)
+                    $notNull: true,
+                  },
+                },
+              ],
+            },
+          },
+        },
+      });
 
+      return { results };
+    },
+    async findOne(slug: string, params: { populate: any }) {
+      return await strapi.db.query("api::product.product").findOne({
+        ...params,
+        where: { slug },
+        select: [
+          "title",
+          "price",
+          "salePrice",
+          "slug",
+          "description",
+          "activation_by_phone",
+          "download_link",
+        ],
+        populate: {
+          instruction_page: {
+            select: ["slug"],
+          },
+          images: {
+            select: ["formats"],
+          },
+          reviews: {
+            orderBy: {
+              createdAt: "desc",
+            },
+            where: {
+              publishedAt: {
+                $notNull: true,
+              },
+            },
+            select: ["text", "is_positive", "created_at"],
+          },
+          product_category: {
+            select: ["slug", "title"],
+          },
+          product_type: {
+            select: ["title"],
+          },
+          product_keys: {
+            select: ["id"],
+            where: {
+              $and: [
+                {
+                  published_at: {
+                    $notNull: true,
+                  },
+                },
+              ],
+            },
+          },
+        },
+      });
+    },
+  })
+);
