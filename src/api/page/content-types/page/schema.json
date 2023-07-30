@@ -10,11 +10,7 @@
   "options": {
     "draftAndPublish": true
   },
-  "pluginOptions": {
-    "versions": {
-      "versioned": true
-    }
-  },
+  "pluginOptions": {},
   "attributes": {
     "title": {
       "type": "string",
