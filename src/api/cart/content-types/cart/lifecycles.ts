@@ -7,7 +7,6 @@ export default {
 
       if (typeof coupons !== "undefined" && coupons.length >= 1) {
         result.sum = coupons.reduce((sum, coupon) => {
-          console.log(sum);
           let discountAmount = coupon.discount;
 
           if (coupon.discount_type === "percent") {
