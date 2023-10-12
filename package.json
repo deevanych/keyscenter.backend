@@ -12,25 +12,25 @@
   "dependencies": {
     "@_sh/strapi-plugin-ckeditor": "^2.0.4",
     "@a2seven/yoo-checkout": "^1.1.4",
-    "@notum-cz/strapi-plugin-content-versioning": "^0.4.7",
-    "@strapi/plugin-i18n": "^4.12.0",
-    "@strapi/plugin-users-permissions": "^4.12.0",
-    "@strapi/strapi": "^4.12.0",
-    "axios": "^1.4.0",
+    "@notum-cz/strapi-plugin-content-versioning": "^1.0.2",
+    "@strapi/plugin-i18n": "^4.14.4",
+    "@strapi/plugin-users-permissions": "^4.14.4",
+    "@strapi/strapi": "^4.14.4",
+    "axios": "^1.5.1",
     "html-to-text": "^9.0.5",
     "mjml": "^4.14.1",
     "mysql": "^2.18.1",
-    "nodemailer": "^6.9.3",
+    "nodemailer": "^6.9.6",
     "strapi-plugin-menus": "^1.4.3",
     "strapi-plugin-redis": "^1.0.1",
-    "strapi-plugin-rest-cache": "^4.2.7",
-    "strapi-provider-rest-cache-redis": "^4.2.7",
-    "uuid": "^9.0.0"
+    "strapi-plugin-rest-cache": "^4.2.8",
+    "strapi-provider-rest-cache-redis": "^4.2.8",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@types/mjml": "^4.7.1",
-    "@types/nodemailer": "^6.4.7",
-    "@types/uuid": "^9.0.1"
+    "@types/mjml": "^4.7.2",
+    "@types/nodemailer": "^6.4.11",
+    "@types/uuid": "^9.0.5"
   },
   "author": {
     "name": "A Strapi developer"
@@ -40,7 +40,7 @@
     "telemetryDisabled": true
   },
   "engines": {
-    "node": ">=14.19.1 <=18.x.x",
+    "node": ">=18.19.1 <=20.x.x",
     "npm": ">=6.0.0"
   },
   "license": "MIT"

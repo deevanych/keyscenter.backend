@@ -2,10 +2,11 @@
  * review service
  */
 
-import { factories } from '@strapi/strapi';
+import {factories} from '@strapi/strapi';
+// @ts-ignore
 
-export default factories.createCoreService('api::review.review', ({ strapi }) => ({
-  async create (ctx) {
+export default factories.createCoreService('api::review.review', ({strapi}) => ({
+  create: async function (ctx) {
     const user = await strapi.db.query('plugin::users-permissions.user').findOne({
       where: {
         email: ctx.data.email
