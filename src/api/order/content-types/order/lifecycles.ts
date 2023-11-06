@@ -1,9 +1,11 @@
 import nodemailer from 'nodemailer'
 import {emailTemplate} from '../../../../data/emailTemplate'
+import {GetValues} from "@strapi/types/dist/modules/entity-service";
 
+// @ts-ignore
 export default {
   async beforeUpdate(event) {
-    const { where, data } = event.params
+    const {where, data} = event.params
 
     const order = await strapi.db.query('api::order.order').findOne({
       where,
@@ -15,11 +17,11 @@ export default {
     }
   },
   async afterUpdate(event) {
-    const { result, state } = event
+    const {result, state} = event
 
     try {
       if (state.orderHasBeenPaid && result.paid_at) {
-        const order = await strapi.entityService.findOne('api::order.order', result.id, {
+        const order: GetValues<any> = await strapi.entityService.findOne('api::order.order', result.id, {
           populate: {
             user: {
               fields: ['email']
@@ -33,6 +35,7 @@ export default {
               }
             },
             product_keys: {
+              // @ts-ignore
               select: ['id'],
               populate: {
                 product: {
