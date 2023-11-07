@@ -28,6 +28,9 @@
     "uuid": "^9.0.1",
     "codemirror5": "npm:codemirror@^5.65.11"
   },
+  "trustedDependencies": [
+    "sharp"
+  ],
   "devDependencies": {
     "@types/mjml": "^4.7.2",
     "@types/nodemailer": "^6.4.11",
@@ -46,7 +49,10 @@
   },
   "overrides": {
     "@strapi/design-system": "^1.6.5",
-    "codemirror": "5.65.12"
+    "codemirror": "5.65.12",
+    "@koa/router": "^12.0.1",
+    "formidable": "^3.1.4",
+    "react-intl": "^6.5.0"
   },
   "license": "MIT"
 }
