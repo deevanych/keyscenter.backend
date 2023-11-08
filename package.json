@@ -17,16 +17,17 @@
     "@strapi/plugin-users-permissions": "^4.14.4",
     "@strapi/strapi": "^4.14.4",
     "axios": "^1.5.1",
+    "codemirror5": "npm:codemirror@^5.65.11",
     "html-to-text": "^9.0.5",
     "mjml": "^4.14.1",
     "mysql": "^2.18.1",
+    "mysql2": "^3.6.3",
     "nodemailer": "^6.9.6",
     "strapi-plugin-menus": "^1.4.3",
     "strapi-plugin-redis": "^1.0.1",
     "strapi-plugin-rest-cache": "^4.2.8",
     "strapi-provider-rest-cache-redis": "^4.2.8",
-    "uuid": "^9.0.1",
-    "codemirror5": "npm:codemirror@^5.65.11"
+    "uuid": "^9.0.1"
   },
   "trustedDependencies": [
     "sharp"
