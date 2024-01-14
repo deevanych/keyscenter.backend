@@ -38,7 +38,7 @@ export default {
               // @ts-ignore
               select: ['id'],
               populate: {
-                product: {
+                products: {
                   fields: ['id', 'title', 'slug', 'price', 'salePrice'],
                   populate: {
                     product_category: {
@@ -80,9 +80,11 @@ export default {
         const orderProducts = []
 
         order.product_keys.forEach((key) => {
-          if (!orderProducts.find((product) => product.id === key.product.id)) {
-            orderProducts.push(key.product)
-          }
+          key.products.forEach((keyProduct) => {
+            if (!orderProducts.find((product) => product.id === keyProduct.id)) {
+              orderProducts.push(keyProduct)
+            }
+          })
         })
 
         await strapi.db.query('api::cart.cart').update({
