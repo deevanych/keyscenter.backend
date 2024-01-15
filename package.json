@@ -17,6 +17,7 @@
     "@strapi/plugin-users-permissions": "^4.14.4",
     "@strapi/strapi": "^4.14.4",
     "axios": "^1.5.1",
+    "better-sqlite3": "^9.2.2",
     "codemirror5": "npm:codemirror@^5.65.11",
     "html-to-text": "^9.0.5",
     "mjml": "^4.14.1",
